@@ -1,18 +1,35 @@
 #include <Arduino.h>
+#include "DHT.h"  // Thư viện DHT
 
-// put function declarations here:
-int myFunction(int, int);
+
+#define DHTPIN 4       // Chân DATA của DHT11 nối GPIO 4
+#define DHTTYPE DHT11  // Loại cảm biến là DHT11
+
+// Tạo đối tượng DHT
+DHT dht(DHTPIN, DHTTYPE);
 
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+  Serial.begin(115200); // Bật Serial để xem kết quả
+  dht.begin();          // Khởi động cảm biến
+  Serial.println("Bat dau doc du lieu tu DHT11...");
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-}
+  
+  float doAm = dht.readHumidity();        // Đọc độ ẩm
+  float nhietDo = dht.readTemperature();  // Đọc nhiệt độ (°C)
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+ 
+  if (isnan(doAm) || isnan(nhietDo)) {
+    Serial.println("Loi: Khong doc duoc du lieu tu DHT11!");
+  } else {
+   
+    Serial.print("Nhiet do: ");
+    Serial.print(nhietDo);
+    Serial.print(" *C  |  Do am: ");
+    Serial.print(doAm);
+    Serial.println(" %");
+  }
+
+  delay(2000); 
 }
